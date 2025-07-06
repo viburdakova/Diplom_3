@@ -34,7 +34,7 @@ class LoginPage(BasePage):
         else:
             self.submit_password_recovery_form_chrome(login_data)
 
-    @allure.step("Клик на личный кабинет в firefox")
+    @allure.step("Клик на личный кабинет")
     def click_personal_account(self):
         self.check_displaying_of_element(LoginPageLocators.LOGIN_BUTTON_ACCOUNT)
         self.click_on_element_firefox(LoginPageLocators.LOGIN_BUTTON_ACCOUNT)

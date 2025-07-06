@@ -10,7 +10,7 @@ class LoginPageLocators:
     LOGIN_BUTTON = By.XPATH, "//button[@class='button_button__33qZ0 button_button_type_primary__1O7Bx button_button_size_medium__3zxIa']"
     ENTER_NEW_PASSWORD = By.XPATH, ".//input[@name='Введите новый пароль']"
     SHOW_HIDE_BUTTON = By.CSS_SELECTOR, ".input__icon.input__icon-action"
-    PERSONAL_ACCOUNT = By.XPATH, "//*[text()='Личный Кабинет']"
+    PERSONAL_ACCOUNT = By.XPATH, "//p[text()='Личный Кабинет']"
     LOGIN_BUTTON_ACCOUNT = By.XPATH, '//*[@id="root"]/div/header/nav/a'
     ORDER_HISTORY = By.XPATH, "//*[text()='История заказов']"
     LOGOUT_BUTTON = By.XPATH, "//*[text()='Выход']"

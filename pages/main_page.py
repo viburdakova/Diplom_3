@@ -99,9 +99,18 @@ class MainPage(BasePage):
         order_button = self.find_element(MainPageLocators.PLACE_AN_ORDER)
         order_button.click()
 
-        order_number = self.get_text(MainPageLocators.ORDER_ID)
+        WebDriverWait(self.driver, 60).until_not(
+            EC.text_to_be_present_in_element(MainPageLocators.ORDER_ID, '9999')
+        )
 
-        return order_number
+    @allure.step("Получение номера заказа")
+    def get_order_number(self):
+        WebDriverWait(self.driver, 20).until_not(
+            EC.text_to_be_present_in_element(MainPageLocators.ORDER_ID, '9999')
+        )
+        order_num = self.get_text(MainPageLocators.ORDER_ID)
+
+        return order_num
 
     @allure.step("Закрыть модальное окно")
     def close_modal_window(self):

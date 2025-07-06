@@ -35,5 +35,7 @@ class TestMainPage:
         main_page.go_to_constructor()
         main_page.add_ingredient_to_order()
 
+        login_page.wait_until_cover_disappears()
         main_page.place_order()
-        main_page.close_modal_window()
+        order_num = main_page.get_order_number()
+        assert order_num != '9999'

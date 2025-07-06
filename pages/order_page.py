@@ -82,10 +82,8 @@ class OrderPage(BasePage):
 
     @allure.step("Получить текущее значение счетчика 'Выполнено за всё время'")
     def get_total_orders_count(self):
-        count_text = WebDriverWait(self.driver, 20).until(
-            EC.visibility_of_element_located(OrderPageLocators.TOTAL_ORDERS_COUNT)
-        ).text
-        return int(count_text)
+        all_orders_num = self.get_text(OrderPageLocators.TOTAL_ORDERS_COUNT)
+        return all_orders_num
 
     @allure.step("Получить текущее значение счетчика 'Выполнено за сегодня'")
     def get_today_orders_count(self):
@@ -93,3 +91,16 @@ class OrderPage(BasePage):
             EC.visibility_of_element_located(OrderPageLocators.TODAY_ORDERS_COUNT)
         ).text
         return int(count_text)
+
+    @allure.step("Найти заказы 'в работе)")
+    def find_order_num_in_progress(self):
+        self.find_element(OrderPageLocators.ORDERS_IN_PROGRESS)
+
+    @allure.step("Получить номер заказа 'в работе)")
+    def get_order_num_in_progress(self):
+        WebDriverWait(self.driver, 20).until_not(
+            EC.text_to_be_present_in_element(OrderPageLocators.ORDERS_IN_PROGRESS,
+                                                              'Все текущие заказы готовы!')
+        )
+        order_num_in_progress = self.get_text(OrderPageLocators.ORDERS_IN_PROGRESS)
+        return order_num_in_progress
