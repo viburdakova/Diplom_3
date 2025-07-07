@@ -1,11 +1,11 @@
-from itertools import count
+
 
 import allure
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from locators.login_page_locators import LoginPageLocators
-from locators.main_page_locators import MainPageLocators
+
 from locators.order_page_locators import OrderPageLocators
 from pages.base_page import BasePage
 
@@ -51,7 +51,6 @@ class OrderPage(BasePage):
         ).click()
         WebDriverWait(self.driver, 20).until(EC.url_contains("/account/order-history"))
 
-
     @allure.step("Получить номера заказов из истории")
     def get_history_order_numbers(self):
         elements = WebDriverWait(self.driver, 10).until(
@@ -92,15 +91,7 @@ class OrderPage(BasePage):
         ).text
         return int(count_text)
 
-    @allure.step("Найти заказы 'в работе)")
-    def find_order_num_in_progress(self):
-        self.find_element(OrderPageLocators.ORDERS_IN_PROGRESS)
-
-    @allure.step("Получить номер заказа 'в работе)")
+    @allure.step("Получить значение номера заказа 'в работе)")
     def get_order_num_in_progress(self):
-        WebDriverWait(self.driver, 20).until_not(
-            EC.text_to_be_present_in_element(OrderPageLocators.ORDERS_IN_PROGRESS,
-                                                              'Все текущие заказы готовы!')
-        )
-        order_num_in_progress = self.get_text(OrderPageLocators.ORDERS_IN_PROGRESS)
-        return order_num_in_progress
+        self.wait_for_clickable(OrderPageLocators.ORDERS_IN_PROGRESS)
+        return self.wait_for_visible(OrderPageLocators.ORDERS_IN_PROGRESS).text

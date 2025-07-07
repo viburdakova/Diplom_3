@@ -1,25 +1,22 @@
 import allure
-import pytest
 import data
-from conftest import driver, login_page
+from conftest import driver, login_page, login_user, create_user
 
 class TestLogin:
 
     @allure.feature("Восстановление пароля")
     @allure.title("Переход на страницу восстановления пароля")
     @allure.description("Проверка перехода на страницу восстановления пароля по кнопке 'Восстановить пароль'")
-    def test_password_recovery(self, driver, login_page):
+    def test_password_recovery(self, login_page):
         login_page.go_to_password_recovery()
         login_page.submit_password_recovery_form(data.login_data)
-        assert login_page.is_password_field_highlighted()
+        login_page.click_show_hide_button()
+        assert login_page.check_is_password_is_active
 
     @allure.feature("Личный кабинет")
     @allure.title("Переход на страницу личного кабинета")
     @allure.description("Проверка  перехода на страницу 'Личный кабинет', 'История заказов', logout")
-    def test_personal_account_navigation(self, driver, login_page):
-        login_page.wait_until_cover_disappears()
-        login_page.auth_personal_account(data.log_pass_data)
-        login_page.wait_until_cover_disappears()
+    def test_personal_account_navigation(self, login_page, login_user):
         login_page.click_personal_account()
         login_page.go_to_order_history()
         login_page.logout()

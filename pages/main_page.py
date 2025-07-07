@@ -1,4 +1,4 @@
-import time
+
 
 import allure
 from selenium.webdriver import ActionChains
@@ -6,6 +6,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from locators.main_page_locators import MainPageLocators
+from locators.order_page_locators import OrderPageLocators
 from pages.base_page import BasePage
 
 
@@ -18,7 +19,7 @@ class MainPage(BasePage):
 
     @allure.step("Перейти в ленту заказов")
     def go_to_order_feed(self):
-        self.click_to_element(MainPageLocators.ORDER_FEED_BUTTON)
+        self.click_on_element_firefox(MainPageLocators.ORDER_FEED_BUTTON)
         WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located(MainPageLocators.ORDER_FEED))
 
     @allure.step("Открыть детали ингредиента")
@@ -32,45 +33,18 @@ class MainPage(BasePage):
 
     @allure.step("Закрыть модальное окно")
     def close_modal_window(self):
-        WebDriverWait(self.driver, 20).until(
+        WebDriverWait(self.driver, 10).until(
             EC.element_to_be_clickable(MainPageLocators.MODAL_CLOSE_BUTTON)
         ).click()
 
-    @allure.step("Перетаскивание ингредиентов")
-    def drag_and_drop(self, locator_from, locator_to):
-        element_from = self.find_element(locator_from)
-        element_to = self.find_elememt(locator_to)
+    @allure.step("Получение номера заказа")
+    def get_order_number(self):
+        WebDriverWait(self.driver, 20).until_not(
+            EC.text_to_be_present_in_element(MainPageLocators.ORDER_ID, '9999')
+        )
+        order_num = self.get_text(MainPageLocators.ORDER_ID)
 
-        self.driver.drag_and_drop(element_from, element_to).perfom()
-
-    @allure.step("Перетаскивание ингредиентов в firefox")
-    def drag_and_drop_element_firefox(self, source_element, target_element):
-        script = """
-                function simulateHTML5DragAndDrop(sourceNode, destinationNode) {
-                    var dataTransfer = new DataTransfer();
-                    var dragStartEvent = new DragEvent('dragstart', {
-                        bubbles: true,
-                        cancelable: true,
-                        dataTransfer: dataTransfer
-                    });
-                    sourceNode.dispatchEvent(dragStartEvent);
-
-                    var dropEvent = new DragEvent('drop', {
-                        bubbles: true,
-                        cancelable: true,
-                        dataTransfer: dataTransfer
-                    });
-                    destinationNode.dispatchEvent(dropEvent);
-    				var dragEndEvent = new DragEvent('dragend', {
-                        bubbles: true,
-                        cancelable: true,
-                        dataTransfer: dataTransfer
-                    });
-                    sourceNode.dispatchEvent(dragEndEvent);
-                }
-                simulateHTML5DragAndDrop(arguments[0], arguments[1]);
-                """
-        self.driver.execute_script(script, source_element, target_element)
+        return order_num
 
     @allure.step("Получить значение счетчика ингредиента")
     def get_ingredient_counter(self):
@@ -96,28 +70,10 @@ class MainPage(BasePage):
 
     @allure.step("Оформить заказ (для авторизованного пользователя)")
     def place_order(self):
-        order_button = self.find_element(MainPageLocators.PLACE_AN_ORDER)
-        order_button.click()
-
-        WebDriverWait(self.driver, 60).until_not(
-            EC.text_to_be_present_in_element(MainPageLocators.ORDER_ID, '9999')
-        )
-
-    @allure.step("Получение номера заказа")
-    def get_order_number(self):
-        WebDriverWait(self.driver, 20).until_not(
-            EC.text_to_be_present_in_element(MainPageLocators.ORDER_ID, '9999')
-        )
-        order_num = self.get_text(MainPageLocators.ORDER_ID)
-
-        return order_num
-
-    @allure.step("Закрыть модальное окно")
-    def close_modal_window(self):
-        WebDriverWait(self.driver, 10).until(
-            EC.element_to_be_clickable(MainPageLocators.MODAL_CLOSE_BUTTON)
-        ).click()
-
-    @allure.step("Проверить что кнопка оформления заказа активна")
-    def is_order_button_active(self):
-        return self.find_element(MainPageLocators.PLACE_AN_ORDER).is_enabled()
+        self.find_element(MainPageLocators.PLACE_AN_ORDER).click()
+        self.wait_for_clickable(OrderPageLocators.ORDER_MODAL)
+        self.wait_for_invisibility(OrderPageLocators.DEFAULT_ORDER_NUMBER)
+        self.wait_for_visible(OrderPageLocators.ORDER_TEXT)
+        order_number = self.wait_for_clickable(OrderPageLocators.ACTUAL_ORDER_NUMBER).text
+        self.get_click(OrderPageLocators.CLOSE_MODAL_BUTTON)
+        return order_number

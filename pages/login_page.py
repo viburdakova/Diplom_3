@@ -12,7 +12,7 @@ class LoginPage(BasePage):
 
     @allure.step("Перейти на страницу восстановления пароля в chrome")
     def go_to_password_recovery(self):
-        self.click_on_element_firefox(LoginPageLocators.RECOVER_PASSWORD)
+        self.get_click(LoginPageLocators.RECOVER_PASSWORD)
         WebDriverWait(self.driver, 20).until(EC.url_contains("/forgot-password"))
 
     @allure.step("Ввести email и кликнуть на кнопку восстановить в chrome")
@@ -36,32 +36,18 @@ class LoginPage(BasePage):
 
     @allure.step("Клик на личный кабинет")
     def click_personal_account(self):
-        self.check_displaying_of_element(LoginPageLocators.LOGIN_BUTTON_ACCOUNT)
-        self.click_on_element_firefox(LoginPageLocators.LOGIN_BUTTON_ACCOUNT)
+        self.get_click(LoginPageLocators.LOGIN_BUTTON_ACCOUNT)
         WebDriverWait(self.driver, 20).until(EC.url_contains("account/profile"))
 
     def wait_until_cover_disappears(self):
         self.cover_elm_with_wait(LoginPageLocators.COVER_ELM)
 
-    @allure.step("Авторизоваться в личном кабинете в chrome")
-    def auth_personal_account_chrome(self, log_pass_data):
-        self.add_text_element(LoginPageLocators.EMAIL, log_pass_data ['my_email'])
-        self.add_text_element(LoginPageLocators.PASSWORD, log_pass_data['my_password'])
-        self.click_to_element(LoginPageLocators.LOGIN_BUTTON)
-
-    @allure.step("Авторизоваться в личном кабинете в firefox")
-    def auth_personal_account_firefox(self, log_pass_data):
-        self.add_text_element(LoginPageLocators.EMAIL, log_pass_data['my_email'])
-        self.add_text_element(LoginPageLocators.PASSWORD, log_pass_data['my_password'])
-        self.click_on_element_firefox(LoginPageLocators.LOGIN_BUTTON)
-
     @allure.step("Авторизоваться в личном кабинете")
-    def auth_personal_account(self, logo_pass_data):
-        browser_name = self.driver.name
-        if browser_name == 'firefox':
-            self.auth_personal_account_firefox(logo_pass_data)
-        else:
-            self.auth_personal_account_chrome(logo_pass_data)
+    def auth_personal_account(self, email, password):
+        self.add_text_element(LoginPageLocators.EMAIL, email)
+        self.add_text_element(LoginPageLocators.PASSWORD, password)
+        self.get_click(LoginPageLocators.LOGIN_BUTTON)
+        self.wait_for_invisibility(LoginPageLocators.LOGIN_BUTTON)
 
     @allure.step("Перейти в личный кабинет в chrome")
     def go_to_personal_account_chrome(self):
@@ -120,22 +106,18 @@ class LoginPage(BasePage):
         else:
             self.logout_chrome()
 
+    @allure.step("Клик на кнопку показть/скрыть пароль")
+    def click_show_hide_button(self):
+        self.click_on_element_firefox(LoginPageLocators.SHOW_HIDE_BUTTON)
+
+    @allure.step("Проверка, что поле пароля активно")
+    def check_is_password_is_active(self):
+        return self.check_displaying_of_element(LoginPageLocators.PASSWORD_IS_ACTIVE)
+
     @allure.step("Проверить что пользователь авторизован")
     def is_authorized(self):
         try:
             WebDriverWait(self.driver, 20).until(EC.presence_of_element_located(LoginPageLocators.LOGOUT_BUTTON))
-            return True
-        except:
-            return False
-
-    @allure.step("Проверка подсвечивания поля пароль при клике на кнопку скрыть/показать")
-    def is_password_field_highlighted(self):
-        self.click_on_element_firefox(LoginPageLocators.SHOW_HIDE_BUTTON)
-        try:
-            WebDriverWait(self.driver, 20).until(
-                lambda d: 'input_status_active' in
-                            d.find_element(*LoginPageLocators.ENTER_NEW_PASSWORD).get_attribute('class')
-                )
             return True
         except:
             return False
