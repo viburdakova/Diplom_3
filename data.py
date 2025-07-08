@@ -3,6 +3,7 @@ from helpers.generators import email, password, name
 
 MAIN_URL = 'https://stellarburgers.nomoreparties.site/'
 PROFILE_URL = f'{MAIN_URL}account/profile'
+FORGOT_PASSWORD = f'{MAIN_URL}forgot-password'
 LOGIN_URL = f'{MAIN_URL}login'
 ORDER_HISTORY = f'{MAIN_URL}account/order-history'
 FEED_URL = f'{MAIN_URL}feed'

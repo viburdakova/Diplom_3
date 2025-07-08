@@ -4,6 +4,7 @@ import allure
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+import data
 from locators.login_page_locators import LoginPageLocators
 
 from locators.order_page_locators import OrderPageLocators
@@ -49,7 +50,7 @@ class OrderPage(BasePage):
         WebDriverWait(self.driver, 10).until(
             EC.element_to_be_clickable(LoginPageLocators.ORDER_HISTORY)
         ).click()
-        WebDriverWait(self.driver, 20).until(EC.url_contains("/account/order-history"))
+        WebDriverWait(self.driver, 20).until(EC.url_contains(data.ORDER_HISTORY))
 
     @allure.step("Получить номера заказов из истории")
     def get_history_order_numbers(self):

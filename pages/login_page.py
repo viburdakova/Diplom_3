@@ -13,7 +13,7 @@ class LoginPage(BasePage):
     @allure.step("Перейти на страницу восстановления пароля в chrome")
     def go_to_password_recovery(self):
         self.get_click(LoginPageLocators.RECOVER_PASSWORD)
-        WebDriverWait(self.driver, 20).until(EC.url_contains("/forgot-password"))
+        WebDriverWait(self.driver, 20).until(EC.url_contains(data.FORGOT_PASSWORD))
 
     @allure.step("Ввести email и кликнуть на кнопку восстановить в chrome")
     def submit_password_recovery_form_chrome(self, login_data):
@@ -37,7 +37,7 @@ class LoginPage(BasePage):
     @allure.step("Клик на личный кабинет")
     def click_personal_account(self):
         self.get_click(LoginPageLocators.LOGIN_BUTTON_ACCOUNT)
-        WebDriverWait(self.driver, 20).until(EC.url_contains("account/profile"))
+        WebDriverWait(self.driver, 20).until(EC.url_contains(data.PROFILE_URL))
 
     def wait_until_cover_disappears(self):
         self.cover_elm_with_wait(LoginPageLocators.COVER_ELM)
@@ -52,12 +52,12 @@ class LoginPage(BasePage):
     @allure.step("Перейти в личный кабинет в chrome")
     def go_to_personal_account_chrome(self):
         self.click_to_element(LoginPageLocators.PERSONAL_ACCOUNT)
-        WebDriverWait(self.driver, 10).until(EC.url_contains("/account/profile"))
+        WebDriverWait(self.driver, 10).until(EC.url_contains(data.PROFILE_URL))
 
     @allure.step("Перейти в личный кабинет в firefox")
     def go_to_personal_account_firefox(self):
         self.click_on_element_firefox(LoginPageLocators.PERSONAL_ACCOUNT)
-        WebDriverWait(self.driver, 10).until(EC.url_contains("/account/profile"))
+        WebDriverWait(self.driver, 10).until(EC.url_contains(data.PROFILE_URL))
 
     @allure.step("Перейти в личный кабинет")
     def click_personal_account(self):
@@ -71,12 +71,12 @@ class LoginPage(BasePage):
     @allure.step("Перейти в историю заказов в chrome")
     def go_to_order_history_chrome(self):
         self.click_to_element(LoginPageLocators.ORDER_HISTORY)
-        WebDriverWait(self.driver, 20).until(EC.url_contains("/account/order-history"))
+        WebDriverWait(self.driver, 20).until(EC.url_contains(data.ORDER_HISTORY))
 
     @allure.step("Перейти в историю заказов в firefox")
     def go_to_order_history_firefox(self):
         self.click_on_element_firefox(LoginPageLocators.ORDER_HISTORY)
-        WebDriverWait(self.driver, 20).until(EC.url_contains("/account/order-history"))
+        WebDriverWait(self.driver, 20).until(EC.url_contains(data.ORDER_HISTORY))
 
     @allure.step("Перейти в историю заказов")
     def go_to_order_history(self):
@@ -90,12 +90,12 @@ class LoginPage(BasePage):
     @allure.step("Выйти из аккаунта в chrome")
     def logout_chrome(self):
         self.click_to_element(LoginPageLocators.LOGOUT_BUTTON)
-        WebDriverWait(self.driver, 20).until(EC.url_contains("/login"))
+        WebDriverWait(self.driver, 20).until(EC.url_contains(data.LOGIN_URL))
 
     @allure.step("Выйти из аккаунта в firefox")
     def logout_firefox(self):
         self.click_on_element_firefox(LoginPageLocators.LOGOUT_BUTTON)
-        WebDriverWait(self.driver, 20).until(EC.url_contains("/login"))
+        WebDriverWait(self.driver, 20).until(EC.url_contains(data.LOGIN_URL))
 
     @allure.step("Выйти из аккаунта")
     def logout(self):
